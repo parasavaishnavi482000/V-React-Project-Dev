@@ -1,0 +1,17 @@
+/* .welcome-container {
+    background-image: url('../assets/your-background-image.jpg'); Adjust path as needed
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    padding-top: 20px;
+  } */
+  
+  .category-card {
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .category-card:hover {
+    background-color: #f8f9fa;
+  }
+  
