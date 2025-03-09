@@ -9,10 +9,12 @@
   .category-card {
     cursor: pointer;
     transition: 0.3s;
+    color: rgb(16, 17, 17);
+    background-color: rgb(108, 185, 189);
   }
   
   .category-card:hover {
-    background-color: #f8f9fa;
+    background-color: #dadbd1b3;
   }
   .welcome-container {
     display: flex;
