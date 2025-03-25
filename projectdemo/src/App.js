@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState } from 'react';
+import Home from './homepage';  // Ensure this exports a component named HomePage
+import Signup from './Signup';      // Ensure this exports a component named Signup
+import Login from './Login';        // Ensure this exports a component named Login
+import LandingPage from './components/landing';  // Ensure this exists
+ 
 function App() {
+  // Set initial page to 'homePage' so HomePage is rendered first.
+  const [page, setPage] = useState('homePage');
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {page === 'homePage' && <Home setPage={setPage} />}
+      {page === 'Signup' && <Signup setPage={setPage} />}
+      {page === 'Login' && <Login setPage={setPage} />}
+      {page === 'landing' && <LandingPage setPage={setPage} />}
     </div>
   );
 }
-
+ 
 export default App;
+ 
+ 
