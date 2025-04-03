@@ -17,6 +17,6 @@ const Input = ({ type, name, value, placeholder, onChange, onBlur, error }) => {
     </div>
   );
 };
- 
 export default Input;
+ 
  
