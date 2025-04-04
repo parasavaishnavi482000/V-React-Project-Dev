@@ -56,7 +56,15 @@ const Login = ({ setPage }) => {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div
+    className="d-flex flex-column min-vh-100"
+    style={{
+      backgroundImage: 'url("/table.jpg")',
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    }}
+  >
       {/* Header */}
       <header className="bg-dark text-white text-center py-2">
         <h2>Office Portal</h2>
@@ -66,8 +74,16 @@ const Login = ({ setPage }) => {
       <div className="container flex-grow-1" style={{ maxWidth: "400px", marginTop: "50px" }}>
         <h2 className="mb-4 text-center">Login</h2>
         {formMessage.text && <div className={`alert alert-${formMessage.type}`} role="alert">{formMessage.text}</div>}
-        <form onSubmit={handleLogin} className="p-3 border rounded shadow bg-white">
-          <div className="mb-3 position-relative">
+        <form
+  onSubmit={handleLogin}
+  className="p-3 "
+  style={{
+    backgroundColor: "rgba(232, 234, 226, 0)", // semi-transparent white
+    backdropFilter: "blur(5px)", // optional blur effect
+    borderRadius: "15px", // smooth corners
+  }}
+>
+  <div className="mb-3 position-relative">
             <Input
               type="text"
               name="identifier"
@@ -95,7 +111,7 @@ const Login = ({ setPage }) => {
    
           <button type="submit" className="btn btn-primary w-100" disabled={isSubmitting}>{isSubmitting ? "Logging In..." : "Login"}</button>
         </form>
-        <p className="mt-3 text-center">
+        <p className="mt-3 text-center text-balck">
           Don’t have an account? <button className="btn btn-link p-0 align-baseline" onClick={() => setPage("signup")}>Sign Up</button>
         </p>
       </div>

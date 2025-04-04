@@ -58,8 +58,16 @@ const Signup = ({ setPage }) => {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      {/* Header */}
+    <div
+    className="d-flex flex-column min-vh-100"
+    style={{
+      backgroundImage: 'url("/signup.jpg")',
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    }}
+  >
+     {/* Header */}
       <header className="bg-dark text-white text-center py-2">
         <h2>Office Portal</h2>
       </header>
@@ -67,8 +75,18 @@ const Signup = ({ setPage }) => {
       {/* Main Content */}
       <div className="container flex-grow-1" style={{ maxWidth: "400px", marginTop: "50px" }}>
         <h2 className="mb-4 text-center">Sign Up</h2>
+        
         {formMessage.text && <div className={`alert alert-${formMessage.type}`} role="alert">{formMessage.text}</div>}
-        <form onSubmit={handleSignup} className="p-3 border rounded shadow bg-white">
+        {/* <form onSubmit={handleSignup} className="p-3 border rounded shadow bg-white"> */}
+        <form
+  onSubmit={handleSignup}
+  className="p-3 "
+  style={{
+    backgroundColor: "rgba(232, 234, 226, 0)", // semi-transparent white
+    backdropFilter: "blur(5px)", // optional blur effect
+    borderRadius: "15px", // smooth corners
+  }}
+>
           {Object.keys(formData).map((key) => (
             <div key={key} className="mb-3 position-relative">
               <Input

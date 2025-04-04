@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { jwtDecode } from "jwt-decode";
-import { FaBars, FaUserCircle, FaPlus, FaMinus } from "react-icons/fa";
-import "./LandingPage.css";
+import { FaBars, FaUserCircle, FaPlus, FaMinus, FaSearch, FaCog } from "react-icons/fa"; // Added icons
 
 const LandingPage = ({ setPage }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedView, setSelectedView] = useState(null);
   const [userDetails, setUserDetails] = useState({ username: "", email: "" });
   const [showProfile, setShowProfile] = useState(false);
-  const [roles, setRoles] = useState([{ id: "", name: "" }]); // Role management
-  const [roleAssignments, setRoleAssignments] = useState([{ id: "", name: "", designation: "" }]); // Role Assignment
+  const [showSettings, setShowSettings] = useState(false);
+  const [roles, setRoles] = useState([{ id: "", name: "" }]);
+  const [roleAssignments, setRoleAssignments] = useState([{ assignment_id: "",  designation: "" }]);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
@@ -36,34 +38,26 @@ const LandingPage = ({ setPage }) => {
     }
   }, [handleLogout, setPage]);
 
-  // Add a new role row
-  const addRole = () => {
-    setRoles([...roles, { id: "", name: "" }]);
-  };
+  // Load roles from localStorage
+useEffect(() => {
+  const storedRoles = localStorage.getItem("roles");
+  if (storedRoles) {
+    setRoles(JSON.parse(storedRoles));
+  }
+}, []);
 
-  // Remove a specific role row
-  const removeRole = (index) => {
-    setRoles(roles.filter((_, i) => i !== index));
-  };
+// Save roles to localStorage on change
+useEffect(() => {
+  localStorage.setItem("roles", JSON.stringify(roles));
+}, [roles]);
 
-  // Handle Role ID and Name change
+
   const handleRoleChange = (index, field, value) => {
     const updatedRoles = [...roles];
     updatedRoles[index][field] = value;
     setRoles(updatedRoles);
   };
 
-  // Add a new role assignment row
-  const addRoleAssignment = () => {
-    setRoleAssignments([...roleAssignments, { id: "", name: "", designation: "" }]);
-  };
-
-  // Remove a specific role assignment row
-  const removeRoleAssignment = (index) => {
-    setRoleAssignments(roleAssignments.filter((_, i) => i !== index));
-  };
-
-  // Handle Role Assignment input changes
   const handleRoleAssignmentChange = (index, field, value) => {
     const updatedAssignments = [...roleAssignments];
     updatedAssignments[index][field] = value;
@@ -71,66 +65,148 @@ const LandingPage = ({ setPage }) => {
   };
 
   return (
-    <div className="container">
-      {/* Header Section */}
-      <header className="header">
-        <h2 className="header-title">Office Portal</h2>
-        <div className="header-actions">
-          {/* Profile Button */}
-          <div className="profile-section">
-            <FaUserCircle className="profile-icon" onClick={() => setShowProfile(!showProfile)} />
-            {showProfile && (
-              <div className="profile-dropdown">
-                <p><strong>{userDetails.username}</strong></p>
-                <p>{userDetails.email}</p>
-                <button className="logout-btn" onClick={handleLogout}>Logout</button>
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+    <div
+      className="d-flex flex-column min-vh-100"
+      style={{
+        backgroundImage: "url('/office-bg.jpg')",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+      >
+      {/* Header */}
+      <header className="bg-dark text-white p-2 d-flex justify-content-between align-items-center ">
+  <h2 className="m-0">Office Portal</h2>
+  <div className="d-flex align-items-center gap-3 position-relative">
+    {/* Search */}
+    <div className="input-group">
+      <span className="input-group-text bg-white">
+        <FaSearch />
+      </span>
+      <input
+  type="text"
+  className="form-control"
+  placeholder="Search..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
+</div>
 
-      {/* Content Section */}
-      <div className="content">
+    {/* Settings Icon */}
+    <FaCog
+      size={24}
+      style={{ cursor: "pointer" }}
+      onClick={() => {
+        setShowProfile(false);
+        setShowSettings((prev) => !prev);
+      }}
+    />
+
+    {/* Profile Icon */}
+    <FaUserCircle
+      size={28}
+      style={{ cursor: "pointer" }}
+      onClick={() => {
+        setShowSettings(false);
+        setShowProfile((prev) => !prev);
+      }}
+    />
+
+    {/* Profile Dropdown */}
+    {showProfile && (
+      <div className="position-absolute top-100 end-0 bg-white text-dark p-3 mt-2 rounded shadow" style={{ minWidth: "200px", zIndex: 10 }}>
+        <p className="mb-1"><strong>Username:</strong> {userDetails.username}</p>
+        <p className="mb-1"><strong>Email:</strong> {userDetails.email}</p>
+        <button className="btn btn-sm btn-outline-danger mt-2" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+    )}
+
+    {/* Settings Dropdown */}
+    {showSettings && (
+      <div className="position-absolute top-100 end-0 bg-white text-dark p-3 mt-2 rounded shadow" style={{ minWidth: "250px", zIndex: 10 }}>
+        <h6 className="text-center">Edit Profile</h6>
+        <div className="mb-2">
+          <label className="form-label">Username</label>
+          <input
+            type="text"
+            className="form-control"
+            value={userDetails.username}
+            onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })}
+          />
+        </div>
+        <div className="mb-2">
+          <label className="form-label">Email</label>
+          <input
+            type="email"
+            className="form-control"
+            value={userDetails.email}
+            onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
+          />
+        </div>
+        <button className="btn btn-sm btn-primary w-100">Save Changes</button>
+      </div>
+    )}
+  </div>
+</header>
+      {/* Main Content */}
+      <div className="d-flex flex-grow-1">
         {/* Sidebar */}
-        <div className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
-          <button className="toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        <div className={`bg-secondary text-white p-3 ${sidebarOpen ? "w-25" : "w-auto"} transition`}>
+          <button className="btn btn-outline-light mb-3" onClick={() => setSidebarOpen(!sidebarOpen)}>
             <FaBars />
           </button>
           {sidebarOpen && (
             <>
-              <button className="btn-sm" onClick={() => setSelectedView("role")}>Role</button>
-              <button className="btn-sm" onClick={() => setSelectedView("roleAssignment")}>Role Assignment</button>
+              <button className="btn btn-light d-block w-100 mb-2" onClick={() => setSelectedView("role")}>
+                Role
+              </button>
+              <button className="btn btn-light d-block w-100 mb-2" onClick={() => setSelectedView("roleAssignment")}>
+                Role Assignment
+              </button>
+              <button className="btn btn-light d-block w-100 mb-2" onClick={() => setSelectedView("settings")}>
+               Settings
+              </button>
+              <button className="btn btn-light d-block w-100" onClick={() => setSelectedView("about")}>
+              About
+             </button>
             </>
           )}
         </div>
 
-        {/* Main Content */}
-        <div className="main-content">
+        {/* Content */}
+        <div className="flex-grow-1 p-4">
           {selectedView === "role" ? (
-            <div className="role-management">
+            <div className="bg-white p-4 shadow rounded">
               <h3 className="text-center">Role Management</h3>
-              {roles.map((role, index) => (
-                <div key={index} className="role-row">
+              {roles
+  .filter((role) =>
+    role.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    role.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .map((role, index) => (
+
+                <div key={index} className="d-flex align-items-center gap-2 mb-2">
                   <input
                     type="text"
+                    className="form-control"
                     placeholder="Role ID"
                     value={role.id}
                     onChange={(e) => handleRoleChange(index, "id", e.target.value)}
-                    className="role-input"
                   />
                   <input
                     type="text"
+                    className="form-control"
                     placeholder="Role Name"
                     value={role.name}
                     onChange={(e) => handleRoleChange(index, "name", e.target.value)}
-                    className="role-input"
                   />
-                  <button className="plus-btn" onClick={addRole}>
+                  <button className="btn btn-primary" onClick={() => setRoles([...roles, { id: "", name: "" }])}>
                     <FaPlus />
                   </button>
                   {roles.length > 1 && (
-                    <button className="minus-btn" onClick={() => removeRole(index)}>
+                    <button className="btn btn-danger" onClick={() => setRoles(roles.filter((_, i) => i !== index))}>
                       <FaMinus />
                     </button>
                   )}
@@ -138,51 +214,71 @@ const LandingPage = ({ setPage }) => {
               ))}
             </div>
           ) : selectedView === "roleAssignment" ? (
-            <div className="role-management">
+            <div className="bg-white p-4 shadow rounded">
               <h3 className="text-center">Role Assignment</h3>
-              {roleAssignments.map((assignment, index) => (
-                <div key={index} className="role-row">
+              {roleAssignments
+  .filter((assignment) =>
+    assignment.assignment_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    assignment.designation.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .map((assignment, index) => (
+
+                <div key={index} className="d-flex align-items-center gap-2 mb-2">
                   <input
                     type="text"
-                    placeholder="ID"
-                    value={assignment.id}
-                    onChange={(e) => handleRoleAssignmentChange(index, "id", e.target.value)}
-                    className="role-input"
+                    className="form-control"
+                    placeholder="assignment_id"
+                    value={assignment.assignment_id}
+                    onChange={(e) => handleRoleAssignmentChange(index, "assignment_id", e.target.value)}
                   />
                   <input
                     type="text"
-                    placeholder="Role Name"
-                    value={assignment.name}
-                    onChange={(e) => handleRoleAssignmentChange(index, "name", e.target.value)}
-                    className="role-input"
-                  />
-                  <input
-                    type="text"
+                    className="form-control"
                     placeholder="Designation"
                     value={assignment.designation}
                     onChange={(e) => handleRoleAssignmentChange(index, "designation", e.target.value)}
-                    className="role-input"
                   />
-                  <button className="plus-btn" onClick={addRoleAssignment}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() =>
+                      setRoleAssignments([...roleAssignments, { id: "", name: "", designation: "" }])
+                    }
+                  >
                     <FaPlus />
                   </button>
                   {roleAssignments.length > 1 && (
-                    <button className="minus-btn" onClick={() => removeRoleAssignment(index)}>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => setRoleAssignments(roleAssignments.filter((_, i) => i !== index))}
+                    >
                       <FaMinus />
                     </button>
                   )}
                 </div>
               ))}
             </div>
-          ) : (
-            <h3 className="text-center">Welcome to Office Management Dashboard</h3>
-          )}
+          ) : selectedView === "settings" ? (
+            <div className="bg-white p-4 shadow rounded">
+    <h3 className="text-center">Settings</h3>
+    <p>Manage your preferences and account settings here.</p>
+    {/* You can even reuse the same settings input fields from header if needed */}
+  </div>
+) : selectedView === "about" ? (
+  <div className="bg-white p-4 shadow rounded">
+    <h3 className="text-center">About</h3>
+    <p>This portal is designed to manage office roles and assignments.</p>
+    <p>Version: 1.0.0</p>
+    <p>Developed by: Vaishu ✨</p>
+  </div>
+) : (
+  <h3 className="text-center">Welcome to Office Management Dashboard</h3>
+)}
         </div>
       </div>
 
-      {/* Footer Section */}
-      <footer className="footer">
-        <p>&copy; 2025 Office Portal. All rights reserved.</p>
+      {/* Footer */}
+      <footer className="bg-dark text-white text-center p-3 mt-auto">
+        &copy; 2025 Office Portal. All rights reserved.
       </footer>
     </div>
   );
