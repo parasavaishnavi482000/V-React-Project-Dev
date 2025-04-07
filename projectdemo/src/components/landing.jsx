@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { jwtDecode } from "jwt-decode";
-import { FaBars, FaUserCircle, FaPlus, FaMinus, FaSearch, FaCog } from "react-icons/fa"; // Added icons
+import { FaBars, FaUserCircle, FaPlus, FaMinus, FaSearch, FaCog, FaSyncAlt } from "react-icons/fa";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const LandingPage = ({ setPage }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -38,7 +39,7 @@ const LandingPage = ({ setPage }) => {
     }
   }, [handleLogout, setPage]);
 
-  // Load roles from localStorage
+
 useEffect(() => {
   const storedRoles = localStorage.getItem("roles");
   if (storedRoles) {
@@ -46,7 +47,7 @@ useEffect(() => {
   }
 }, []);
 
-// Save roles to localStorage on change
+
 useEffect(() => {
   localStorage.setItem("roles", JSON.stringify(roles));
 }, [roles]);
@@ -76,7 +77,10 @@ useEffect(() => {
       >
       {/* Header */}
       <header className="bg-dark text-white p-2 d-flex justify-content-between align-items-center ">
-  <h2 className="m-0">Office Portal</h2>
+  <h2 className="m-0 d-flex align-items-center gap-2">
+    Office Portal
+    <i className="bi bi-circle-square"></i>
+  </h2>
   <div className="d-flex align-items-center gap-3 position-relative">
     {/* Search */}
     <div className="input-group">
@@ -91,6 +95,17 @@ useEffect(() => {
   onChange={(e) => setSearchTerm(e.target.value)}
 />
 </div>
+
+     {/* Refresh Icon */}
+<FaSyncAlt
+  size={22}
+  style={{ cursor: "pointer" }}
+  title="Refresh"
+  onClick={() => {
+    setSidebarOpen(false);
+    setSelectedView(null);
+  }}
+/>
 
     {/* Settings Icon */}
     <FaCog
@@ -261,7 +276,7 @@ useEffect(() => {
             <div className="bg-white p-4 shadow rounded">
     <h3 className="text-center">Settings</h3>
     <p>Manage your preferences and account settings here.</p>
-    {/* You can even reuse the same settings input fields from header if needed */}
+   
   </div>
 ) : selectedView === "about" ? (
   <div className="bg-white p-4 shadow rounded">
@@ -271,14 +286,14 @@ useEffect(() => {
     <p>Developed by: Vaishu ✨</p>
   </div>
 ) : (
-  <h3 className="text-center">Welcome to Office Management Dashboard</h3>
+  <h3 className="text-center">Welcome to CricleSquare <i className="bi bi-circle-square"></i></h3>
 )}
         </div>
       </div>
 
       {/* Footer */}
       <footer className="bg-dark text-white text-center p-3 mt-auto">
-        &copy; 2025 Office Portal. All rights reserved.
+        &copy;   2025 Circle Square. All rights reserved.
       </footer>
     </div>
   );

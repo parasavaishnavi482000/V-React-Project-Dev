@@ -68,9 +68,12 @@ const Signup = ({ setPage }) => {
     }}
   >
      {/* Header */}
-      <header className="bg-dark text-white text-center py-2">
-        <h2>Office Portal</h2>
-      </header>
+     <header className="bg-dark text-white  p-2 d-flex justify-content-between align-items-center ">
+  <h2 className="m-0 d-flex align-items-center gap-2">
+    Office Portal
+    <i className="bi bi-circle-square"></i>
+  </h2>
+  </header>
       
       {/* Main Content */}
       <div className="container flex-grow-1" style={{ maxWidth: "400px", marginTop: "50px" }}>
@@ -82,9 +85,9 @@ const Signup = ({ setPage }) => {
   onSubmit={handleSignup}
   className="p-3 "
   style={{
-    backgroundColor: "rgba(232, 234, 226, 0)", // semi-transparent white
-    backdropFilter: "blur(5px)", // optional blur effect
-    borderRadius: "15px", // smooth corners
+    backgroundColor: "rgba(232, 234, 226, 0)", 
+    backdropFilter: "blur(5px)", 
+    borderRadius: "15px", 
   }}
 >
           {Object.keys(formData).map((key) => (
@@ -112,7 +115,7 @@ const Signup = ({ setPage }) => {
       
       {/* Footer */}
       <footer className="bg-dark text-white text-center py-2 mt-auto">
-        <p>&copy; 2025 Office Portal. All rights reserved.</p>
+        <p>&copy;  ©2025 Circle Square. All rights reserved.</p>
       </footer>
     </div>
   );

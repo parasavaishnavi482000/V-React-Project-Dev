@@ -7,15 +7,22 @@ const HomePage = ({ setPage }) => {
     <div
     className="d-flex flex-column min-vh-100"
     style={{
-      backgroundImage: "url('/homepage.jpg')",
+      backgroundImage: "url('/homepage2.jpg')",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "center",
     }}
     >  {/* Header */}
-      <header className="bg-dark text-white text-center py-2">
+      {/* <header className="bg-dark text-white text-center py-2">
         <h2>Office Portal</h2>
-      </header>
+        <i className="bi bi-circle-square"></i>
+      </header> */}
+        <header className="bg-dark text-white  p-2 d-flex justify-content-between align-items-center ">
+  <h2 className="m-0 d-flex align-items-center gap-2">
+    Office Portal
+    <i className="bi bi-circle-square"></i>
+  </h2>
+  </header>
 
       {/* Main Content */}
       <div className="container mt-5 text-center flex-grow-1 d-flex flex-column justify-content-center align-items-center">
@@ -25,7 +32,7 @@ const HomePage = ({ setPage }) => {
           animate={{ x: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 60, damping: 12 }}
         >
-          Welcome to my office
+          Welcome To My CircleSquare<i className="bi bi-circle-square"></i>
         </motion.h1>
 
         {/* Animated Buttons */}
@@ -46,7 +53,7 @@ const HomePage = ({ setPage }) => {
 
       {/* Footer */}
       <footer className="bg-dark text-white text-center py-2 mt-auto">
-        <p>&copy; 2025 Office Portal. All rights reserved.</p>
+        <p>&copy;   2025 Circle Square. All rights reserved.</p>
       </footer>
     </div>
   );
