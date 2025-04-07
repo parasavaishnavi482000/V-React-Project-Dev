@@ -1,33 +1,33 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { jwtDecode } from "jwt-decode";
-import { FaBars, FaUserCircle, FaPlus, FaMinus, FaSearch, FaCog, FaSyncAlt } from "react-icons/fa";
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import { FaSearch, FaCog, FaUserCircle } from "react-icons/fa";
+import Roles from "./roles";
+import RoleAssign from "./roleassign";
+import Departments from "./departments";
+import bootstrap from "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+ 
 const LandingPage = ({ setPage }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [selectedView, setSelectedView] = useState(null);
+  const [selectedView, setSelectedView] = useState("home");
   const [userDetails, setUserDetails] = useState({ username: "", email: "" });
-  const [showProfile, setShowProfile] = useState(false);
+  const [showProfileInfo, setShowProfileInfo] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [roles, setRoles] = useState([{ id: "", name: "" }]);
-  const [roleAssignments, setRoleAssignments] = useState([{ assignment_id: "",  designation: "" }]);
   const [searchTerm, setSearchTerm] = useState("");
-
-
+ 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
     setPage("login");
   }, [setPage]);
-
+ 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return setPage("login");
-
+ 
     try {
       const decodedToken = jwtDecode(token);
       const currentTime = Math.floor(Date.now() / 1000);
-
       if (decodedToken.exp < currentTime) {
         handleLogout();
       } else {
@@ -38,49 +38,35 @@ const LandingPage = ({ setPage }) => {
       handleLogout();
     }
   }, [handleLogout, setPage]);
-
-
-useEffect(() => {
-  const storedRoles = localStorage.getItem("roles");
-  if (storedRoles) {
-    setRoles(JSON.parse(storedRoles));
-  }
-}, []);
-
-
-useEffect(() => {
-  localStorage.setItem("roles", JSON.stringify(roles));
-}, [roles]);
-
-
-  const handleRoleChange = (index, field, value) => {
-    const updatedRoles = [...roles];
-    updatedRoles[index][field] = value;
-    setRoles(updatedRoles);
-  };
-
-  const handleRoleAssignmentChange = (index, field, value) => {
-    const updatedAssignments = [...roleAssignments];
-    updatedAssignments[index][field] = value;
-    setRoleAssignments(updatedAssignments);
-  };
-
+ 
   return (
     <div
-      className="d-flex flex-column min-vh-100"
+      className="d-flex flex-column min-vh-100 landing-container"
+      // Note: Update the image path as needed (it's recommended to place images in the public folder)
       style={{
         backgroundImage: "url('/office-bg.jpg')",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
       }}
-      >
-      {/* Header */}
-      <header className="bg-dark text-white p-2 d-flex justify-content-between align-items-center ">
-  <h2 className="m-0 d-flex align-items-center gap-2">
-    Office Portal
-    <i className="bi bi-circle-square"></i>
-  </h2>
+    >
+   <header className="bg-dark text-white p-2 d-flex justify-content-between align-items-center">
+  <div className="d-flex align-items-center gap-3">
+    {/* Sidebar Toggle Button */}
+    <button
+      className="btn btn-outline-light"
+      onClick={() => {
+        const sidebar = document.getElementById("offcanvasSidebar");
+        const bsSidebar = bootstrap.Offcanvas.getOrCreateInstance(sidebar);
+        bsSidebar.toggle();
+      }}
+    >
+      <i className="bi bi-list" style={{ fontSize: "1.5rem" }}></i>
+    </button>
+
+    <h2 className="m-0">Office Portal <i className="bi bi-circle-square"></i></h2>
+  </div>
+
   <div className="d-flex align-items-center gap-3 position-relative">
     {/* Search */}
     <div className="input-group">
@@ -88,31 +74,30 @@ useEffect(() => {
         <FaSearch />
       </span>
       <input
-  type="text"
-  className="form-control"
-  placeholder="Search..."
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-/>
-</div>
-
-     {/* Refresh Icon */}
-<FaSyncAlt
-  size={22}
-  style={{ cursor: "pointer" }}
-  title="Refresh"
-  onClick={() => {
-    setSidebarOpen(false);
-    setSelectedView(null);
-  }}
-/>
+        type="text"
+        className="form-control"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+    <div className="d-flex align-items-center gap-3 position-relative">
+    {/* 🔄 Refresh Button */}
+    <button
+      className="btn btn-outline-light"
+      title="Refresh"
+      onClick={() => setSelectedView("home")}
+    >
+      <i className="bi bi-arrow-clockwise" style={{ fontSize: "1.3rem" }}></i>
+    </button>
+    </div>
 
     {/* Settings Icon */}
     <FaCog
       size={24}
       style={{ cursor: "pointer" }}
       onClick={() => {
-        setShowProfile(false);
+        setShowProfileInfo(false);
         setShowSettings((prev) => !prev);
       }}
     />
@@ -123,13 +108,16 @@ useEffect(() => {
       style={{ cursor: "pointer" }}
       onClick={() => {
         setShowSettings(false);
-        setShowProfile((prev) => !prev);
+        setShowProfileInfo((prev) => !prev);
       }}
     />
 
     {/* Profile Dropdown */}
-    {showProfile && (
-      <div className="position-absolute top-100 end-0 bg-white text-dark p-3 mt-2 rounded shadow" style={{ minWidth: "200px", zIndex: 10 }}>
+    {showProfileInfo && (
+      <div
+        className="position-absolute top-100 end-0 bg-white text-dark p-3 mt-2 rounded shadow profile-info-box"
+        style={{ minWidth: "200px", zIndex: 10 }}
+      >
         <p className="mb-1"><strong>Username:</strong> {userDetails.username}</p>
         <p className="mb-1"><strong>Email:</strong> {userDetails.email}</p>
         <button className="btn btn-sm btn-outline-danger mt-2" onClick={handleLogout}>
@@ -140,7 +128,10 @@ useEffect(() => {
 
     {/* Settings Dropdown */}
     {showSettings && (
-      <div className="position-absolute top-100 end-0 bg-white text-dark p-3 mt-2 rounded shadow" style={{ minWidth: "250px", zIndex: 10 }}>
+      <div
+        className="position-absolute top-100 end-0 bg-white text-dark p-3 mt-2 rounded shadow"
+        style={{ minWidth: "250px", zIndex: 10 }}
+      >
         <h6 className="text-center">Edit Profile</h6>
         <div className="mb-2">
           <label className="form-label">Username</label>
@@ -165,138 +156,72 @@ useEffect(() => {
     )}
   </div>
 </header>
+
+ 
       {/* Main Content */}
-      <div className="d-flex flex-grow-1">
-        {/* Sidebar */}
-        <div className={`bg-secondary text-white p-3 ${sidebarOpen ? "w-25" : "w-auto"} transition`}>
-          <button className="btn btn-outline-light mb-3" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            <FaBars />
-          </button>
-          {sidebarOpen && (
-            <>
-              <button className="btn btn-light d-block w-100 mb-2" onClick={() => setSelectedView("role")}>
-                Role
-              </button>
-              <button className="btn btn-light d-block w-100 mb-2" onClick={() => setSelectedView("roleAssignment")}>
-                Role Assignment
-              </button>
-              <button className="btn btn-light d-block w-100 mb-2" onClick={() => setSelectedView("settings")}>
-               Settings
-              </button>
-              <button className="btn btn-light d-block w-100" onClick={() => setSelectedView("about")}>
-              About
-             </button>
-            </>
+      <div className="flex-grow-1 p-4">
+        {/* Offcanvas Sidebar */}
+        <div
+          className="offcanvas offcanvas-start text-bg-dark"
+          tabIndex="-1"
+          id="offcanvasSidebar"
+          aria-labelledby="offcanvasSidebarLabel"
+          style={{ width: "220px" }}
+        >
+          <div className="offcanvas-header">
+            <h5 className="offcanvas-title" id="offcanvasSidebarLabel">Menu</h5>
+            <button
+              type="button"
+              className="btn-close btn-close-white"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div className="offcanvas-body d-flex flex-column gap-3 px-2">
+  <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("role")} data-bs-dismiss="offcanvas">
+    <i className="bi bi-people-fill"></i> Role
+  </button>
+  <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("roleAssignment")} data-bs-dismiss="offcanvas">
+    <i className="bi bi-person-plus-fill"></i> Role Assignment
+  </button>
+  <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("departments")} data-bs-dismiss="offcanvas">
+    <i className="bi bi-diagram-3-fill"></i> Departments
+  </button>
+</div>
+
+        </div>
+ 
+        {/* Content Area */}
+        <div className="content-area">
+          {selectedView === "home" && (
+            <div className="welcome-message text-center p-5 text-white">
+              <h1>Welcome to Cirlce Square</h1>
+              </div>
+          )}
+          {selectedView === "role" && <Roles />}
+          {selectedView === "roleAssignment" && <RoleAssign />}
+          {selectedView === "departments" && <Departments />}
+          {selectedView === "settings" && (
+            <div className="bg-white p-4 shadow rounded">
+              
+            </div>
+          )}
+          {selectedView === "about" && (
+            <div className="bg-white p-4 shadow rounded">
+              
+            </div>
           )}
         </div>
-
-        {/* Content */}
-        <div className="flex-grow-1 p-4">
-          {selectedView === "role" ? (
-            <div className="bg-white p-4 shadow rounded">
-              <h3 className="text-center">Role Management</h3>
-              {roles
-  .filter((role) =>
-    role.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    role.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-  .map((role, index) => (
-
-                <div key={index} className="d-flex align-items-center gap-2 mb-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Role ID"
-                    value={role.id}
-                    onChange={(e) => handleRoleChange(index, "id", e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Role Name"
-                    value={role.name}
-                    onChange={(e) => handleRoleChange(index, "name", e.target.value)}
-                  />
-                  <button className="btn btn-primary" onClick={() => setRoles([...roles, { id: "", name: "" }])}>
-                    <FaPlus />
-                  </button>
-                  {roles.length > 1 && (
-                    <button className="btn btn-danger" onClick={() => setRoles(roles.filter((_, i) => i !== index))}>
-                      <FaMinus />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : selectedView === "roleAssignment" ? (
-            <div className="bg-white p-4 shadow rounded">
-              <h3 className="text-center">Role Assignment</h3>
-              {roleAssignments
-  .filter((assignment) =>
-    assignment.assignment_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    assignment.designation.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-  .map((assignment, index) => (
-
-                <div key={index} className="d-flex align-items-center gap-2 mb-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="assignment_id"
-                    value={assignment.assignment_id}
-                    onChange={(e) => handleRoleAssignmentChange(index, "assignment_id", e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Designation"
-                    value={assignment.designation}
-                    onChange={(e) => handleRoleAssignmentChange(index, "designation", e.target.value)}
-                  />
-                  <button
-                    className="btn btn-primary"
-                    onClick={() =>
-                      setRoleAssignments([...roleAssignments, { id: "", name: "", designation: "" }])
-                    }
-                  >
-                    <FaPlus />
-                  </button>
-                  {roleAssignments.length > 1 && (
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => setRoleAssignments(roleAssignments.filter((_, i) => i !== index))}
-                    >
-                      <FaMinus />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : selectedView === "settings" ? (
-            <div className="bg-white p-4 shadow rounded">
-    <h3 className="text-center">Settings</h3>
-    <p>Manage your preferences and account settings here.</p>
-   
-  </div>
-) : selectedView === "about" ? (
-  <div className="bg-white p-4 shadow rounded">
-    <h3 className="text-center">About</h3>
-    <p>This portal is designed to manage office roles and assignments.</p>
-    <p>Version: 1.0.0</p>
-    <p>Developed by: Vaishu ✨</p>
-  </div>
-) : (
-  <h3 className="text-center">Welcome to CricleSquare <i className="bi bi-circle-square"></i></h3>
-)}
-        </div>
       </div>
-
+ 
       {/* Footer */}
       <footer className="bg-dark text-white text-center p-3 mt-auto">
-        &copy;   2025 Circle Square. All rights reserved.
+        &copy; 2025 Circle Square. All rights reserved.
       </footer>
     </div>
   );
 };
-
+ 
 export default LandingPage;
+ 
+ 
