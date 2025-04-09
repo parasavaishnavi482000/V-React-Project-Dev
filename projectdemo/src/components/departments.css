@@ -1,0 +1,10 @@
+/* Blur the background when modal is open */
+body.modal-opened {
+    overflow: hidden;
+  }
+  
+  .blur-background {
+    filter: blur(4px);
+    pointer-events: none;
+  }
+ 

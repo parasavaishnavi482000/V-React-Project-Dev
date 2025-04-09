@@ -181,12 +181,13 @@ const LandingPage = ({ setPage }) => {
   <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("role")} data-bs-dismiss="offcanvas">
     <i className="bi bi-people-fill"></i> Role
   </button>
-  <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("roleAssignment")} data-bs-dismiss="offcanvas">
-    <i className="bi bi-person-plus-fill"></i> Role Assignment
-  </button>
   <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("departments")} data-bs-dismiss="offcanvas">
     <i className="bi bi-diagram-3-fill"></i> Departments
   </button>
+  <button className="btn btn-outline-light d-flex align-items-center gap-2" onClick={() => setSelectedView("roleAssignment")} data-bs-dismiss="offcanvas">
+    <i className="bi bi-person-plus-fill"></i> Role Assignment
+  </button>
+ 
 </div>
 
         </div>

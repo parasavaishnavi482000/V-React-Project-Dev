@@ -1,0 +1,31 @@
+/* .profile-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .profile-info-box {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    color: black;
+    padding: 12px;
+    margin-top: 8px;
+    min-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+  }
+  
+  .profile-wrapper:hover .profile-info-box {
+    display: block;
+  }
+  
+  .profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+   */
