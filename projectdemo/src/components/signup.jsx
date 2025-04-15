@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Input from "./input";
+import Input from "./Input";
 import { validateInput, validateForm } from "../Validators/namevalidator";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -43,7 +43,7 @@ const Signup = ({ setPage }) => {
     setIsSubmitting(true);
     try {
       const { confirmPassword, ...signupData } = formData;
-      const response = await axios.post("http://localhost:5000/api/signup", signupData);
+      const response = await axios.post("http://localhost:5001/api/signup", signupData);
       setFormMessage({ type: "success", text: response.data.message });
       setTimeout(() => setPage("login"), 2000);
     } catch (error) {
@@ -61,7 +61,7 @@ const Signup = ({ setPage }) => {
     <div
     className="d-flex flex-column min-vh-100"
     style={{
-      backgroundImage: 'url("/signup.jpg")',
+      backgroundImage: 'url("/shake-hand2.jpg")',
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
@@ -77,18 +77,19 @@ const Signup = ({ setPage }) => {
       
       {/* Main Content */}
       <div className="container flex-grow-1" style={{ maxWidth: "400px", marginTop: "50px" }}>
-        <h2 className="mb-4 text-center">Sign Up</h2>
+        {/* <h2 className="mb-4 text-center">Sign Up</h2> */}
         
         {formMessage.text && <div className={`alert alert-${formMessage.type}`} role="alert">{formMessage.text}</div>}
         {/* <form onSubmit={handleSignup} className="p-3 border rounded shadow bg-white"> */}
         <form
   onSubmit={handleSignup}
-  className="p-3 "
-  style={{
-    backgroundColor: "rgba(232, 234, 226, 0)", 
-    backdropFilter: "blur(5px)", 
-    borderRadius: "15px", 
-  }}
+  className="p-3"
+style={{
+  backgroundColor: "rgba(255, 255, 255, 0)", // Fully transparent
+  border: "none",                            // No border blur
+  boxShadow: "none",                         // No outer shadow
+  borderRadius: "15px",
+}}
 >
           {Object.keys(formData).map((key) => (
             <div key={key} className="mb-3 position-relative">
@@ -106,8 +107,8 @@ const Signup = ({ setPage }) => {
           ))}
           <button type="submit" className="btn btn-success w-100" disabled={isSubmitting}>{isSubmitting ? "Signing Up..." : "Sign Up"}</button>
         </form>
-        <p className="mt-3 text-center">
-          Already have an account? <button className="btn btn-link p-0 align-baseline" onClick={() => setPage("login")}>
+        <p className="mt-3 text-center text-white">
+          Already have an account? <button className="btn btn-outline-light p-0 align-baseline" onClick={() => setPage("login")}>
             Login
           </button>
         </p>
